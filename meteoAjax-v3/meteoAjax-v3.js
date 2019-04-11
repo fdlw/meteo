@@ -1,7 +1,7 @@
-var obj ;
+var obj;
 
 $(document).ready(function () {
-	
+
 	$("button#meteo2").after('<button id="meteo3">graphique</button>');
 	$("button#meteo3").attr({ disabled: true });
 
@@ -100,63 +100,72 @@ function afficher(result) {
 }
 function graphe(obj) {
 	$("body").append('<div id="container"</div>');
-	var tabtmin =[];
-	var tabtmax =[] ;
-	var tabjour =[];
-	for (var i = 0; i < 5; i++){
-		tabtmin.push(obj["fcst_day_" + i].tmin);
-		tabtmax.push(obj["fcst_day_" + i].tmax);
-		tabjour.push(obj["fcst_day_" + i].day_long);
+	var tabtmin = [];
+	var tabtmax = [];
+	var tabjour = [];
+	// version avec le JSON
+	// for (var i = 0; i < 5; i++){
+	// 	tabtmin.push(obj["fcst_day_" + i].tmin);
+	// 	tabtmax.push(obj["fcst_day_" + i].tmax);
+	// 	tabjour.push(obj["fcst_day_" + i].day_long);
+
+	// }
+	// version avec le tableau
+	$("table#prev_jours tr").each(function () {
+	
+		console.log('there');
+		tabjour.push($(this).children("td:nth-child(1)").text());
+		tabtmin.push(parseInt($(this).children("td:nth-child(4)").text()));
+		tabtmax.push(parseInt($(this).children("td:nth-child(5)").text()));
+	});
+		console.log(tabtmin, tabtmax, tabjour);
+
+
+		Highcharts.chart('container', {
+			chart: {
+				type: 'column'
+			},
+			title: {
+				text: 'Temperature sur 5 jours'
+			},
+			subtitle: {
+				text: 'un exo qui utilise HighCharts'
+			},
+			xAxis: {
+				categories: tabjour,
+				crosshair: true
+			},
+			yAxis: {
+				min: 0,
+				title: {
+					text: 'temperature (°C)'
+				}
+			},
+			tooltip: {
+				headerFormat: '<span style="font-size:10px">{point.key}</span><table>',
+				pointFormat: '<tr><td style="color:{series.color};padding:0">{series.name}: </td>' +
+					'<td style="padding:0"><b>{point.y:.1f} mm</b></td></tr>',
+				footerFormat: '</table>',
+				shared: false,
+				useHTML: false
+			},
+			plotOptions: {
+				column: {
+					pointPadding: 0.2,
+					borderWidth: 0
+				}
+			},
+			series: [{
+				name: 'Tmin',
+				data: tabtmin
+			}, {
+				name: 'Tmax',
+				data: tabtmax
+
+			}]
+
+		});
+
+		$("button#meteo3").attr({ disabled: true });
 
 	}
-	console.log(tabtmin, tabtmax, tabjour);
-
-
-Highcharts.chart('container', {
-    chart: {
-        type: 'column'
-    },
-    title: {
-        text: 'Temperature sur 5 jours'
-    },
-    subtitle: {
-        text: 'un exo qui utilise HighCharts'
-    },
-    xAxis: {
-        categories: tabjour,
-        crosshair: true
-    },
-    yAxis: {
-        min: 0,
-        title: {
-            text: 'temperature (°C)'
-        }
-    },
-    tooltip: {
-        headerFormat: '<span style="font-size:10px">{point.key}</span><table>',
-        pointFormat: '<tr><td style="color:{series.color};padding:0">{series.name}: </td>' +
-            '<td style="padding:0"><b>{point.y:.1f} mm</b></td></tr>',
-        footerFormat: '</table>',
-        shared: true,
-        useHTML: true
-    },
-    plotOptions: {
-        column: {
-            pointPadding: 0.2,
-            borderWidth: 0
-        }
-    },
-    series: [{
-        name: 'Tmin',
-        data: tabtmin
-    }, {
-        name: 'Tmax',
-        data: tabtmax
-
-    }]
-	
-});
-
-$("button#meteo3").attr({ disabled: true });
-
-}

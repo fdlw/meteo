@@ -49,6 +49,7 @@ function myAjax(nomVille) {
         error: function (result) {
 
             console.log('error');
+            alert("Oups... nous rencontrons quelques difficultés et ne pouvons répondre à votre demande!")
 
         },
         complete: function (result) {
